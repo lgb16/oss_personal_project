@@ -1,15 +1,20 @@
-import pygame
-import sys
+import pygame,sys
+from datafile import *
 
+#declare window size
 SCREEN_WIDTH = 640
 SCREEN_HEIGHT = 480
 
+#declare color RGB
 white = (255, 255, 255)
 black = (0, 0, 0)
 
+#initialize window
 pygame.init()
 pygame.display.set_caption("Simple PyGame Example")
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+spr_character = SpriteSheet('phoenix-cc0-spritesheet.png', 20, 20, 5, 4, 19)
 
 pos_x=200
 pos_y=200
@@ -17,6 +22,7 @@ pos_y=200
 clock = pygame.time.Clock()
 while True:
     clock.tick(60)
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
@@ -35,5 +41,5 @@ while True:
         pos_y +=3
 
     screen.fill(black)
-    pygame.draw.circle(screen, white, (pos_x, pos_y), 20)
-    pygame.display.update()
+    screen.blit(spr_character.spr[0], (pos_x, pos_y))
+    pygame.display.flip()
