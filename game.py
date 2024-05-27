@@ -5,21 +5,23 @@ from datafile import *
 SCREEN_WIDTH = 640
 SCREEN_HEIGHT = 480
 
-#declare color RGB
-white = (255, 255, 255)
-black = (0, 0, 0)
-
 #initialize window
 pygame.init()
 pygame.display.set_caption("Simple PyGame Example")
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-spr_character = SpriteSheet('phoenix-cc0-spritesheet.png', 20, 20, 5, 4, 19)
+#class for player character
+class Player:
+    def __init__(self):
+        self.spr_player = SpriteSheet('phoenix-cc0-spritesheet.png',20,20,5,4,19) 
+        self.pos_x=200
+        self.pos_y=200
 
-pos_x=200
-pos_y=200
 
 clock = pygame.time.Clock()
+
+player=Player()
+
 while True:
     clock.tick(60)
 
@@ -29,17 +31,21 @@ while True:
 
     key_event = pygame.key.get_pressed()
     if key_event[pygame.K_LEFT]:
-        pos_x -=3
+        player.pos_x -=3
 
     if key_event[pygame.K_RIGHT]:
-        pos_x +=3
+        player.pos_x +=3
 
     if key_event[pygame.K_UP]:
-        pos_y -=3
+        player.pos_y -=3
 
     if key_event[pygame.K_DOWN]:
-        pos_y +=3
+        player.pos_y +=3
 
-    screen.fill(black)
-    screen.blit(spr_character.spr[0], (pos_x, pos_y))
-    pygame.display.flip()
+    if key_event[pygame.K_w]:
+        player.pos_y +=3
+
+
+    screen.fill(white)
+    screen.blit(player.spr_player.spr[0], (player.pos_x, player.pos_y))
+    pygame.display.update()
