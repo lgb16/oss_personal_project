@@ -6,12 +6,19 @@ DIR_IMAGE = os.path.join(DIR_PATH, 'image')
 #declare color
 white = (255,255,255)
 black = (0,0,0)
+green = (51,204,0)
 
 #declare screen size
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 960
+SCORE_HEIGHT = 100
+
+Grass_WIDTH = 32
+Grass_HEIGHT=32
 
 clock=pygame.time.Clock()
+
+#Font=pygame.font.SysFont("arial",30,True,False)
 
 class SpriteSheet:
     def __init__(self, filename, width, height, max_row, max_col, max_index):
