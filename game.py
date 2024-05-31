@@ -9,6 +9,7 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 Font=pygame.font.Font(None,50)
 start_tick = pygame.time.get_ticks()
 
+#declare data classes for game
 background_spr=SpriteSheet('Grass.png')
 background_spr.get_image(0,0,size_Grass)
 player=Player()
@@ -36,6 +37,8 @@ while True:
         player.pos_y +=3
 
     if key_event[pygame.K_a]:
+        if player.attacking == False:
+            player.index=0
         player.attacking = True
     else:
         player.attacking = False
@@ -55,8 +58,16 @@ while True:
     text_time=Font.render("TIME : "+str((pygame.time.get_ticks()-start_tick)//1000),True,white)
     screen.blit(text_time,(30,30))
 
-    #show player and enemies
+    #show flames
+    for flame in group_Flame:
+        flame.update()
+        if flame.out_boundary:
+            group_Flame.remove(flame)
+        else:
+            screen.blit(flame.image, (flame.pos_x, flame.pos_y))
+
+    #show player
     player.update()
     screen.blit(player.image, (player.pos_x, player.pos_y))
-    
+
     pygame.display.update()

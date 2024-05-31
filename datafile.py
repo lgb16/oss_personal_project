@@ -19,7 +19,7 @@ size_Flame = [24,24]
 
 clock=pygame.time.Clock()
 
-#Font=pygame.font.SysFont("arial",30,True,False)
+group_Flame = []
 
 class SpriteSheet:
     def __init__(self, filename):
@@ -32,6 +32,54 @@ class SpriteSheet:
         image_scaled = pygame.transform.scale(image,(size[0]*4,size[1]*4))
         image_scaled.set_colorkey(black)
         self.spr.append(image_scaled)
+
+class Flame(pygame.sprite.Sprite):
+    def __init__(self, x, y, fliped):
+        self.spr = SpriteSheet('Flame-spritesheet.png')
+        for i in range(7):
+            self.spr.get_image(0,i*size_Flame[1],size_Flame)
+
+        self.elapsedTime = 0
+        self.limitTime = 1000/20
+
+        self.pos_x=x
+        self.pos_y=y
+
+        self.fliped=fliped
+        self.out_boundary=False
+
+        self.index=0
+
+        self.image = self.spr.spr[self.index]
+        if self.fliped:
+            self.image = pygame.transform.flip(self.image,True,False)
+        self.rect = self.image.get_rect(center=(self.pos_x,self.pos_y))
+
+    def update(self):
+        #check boundary
+        if self.pos_x < -2*size_Flame[0] or self.pos_x > SCREEN_WIDTH:
+            self.out_boundary=True
+
+        #update position
+        if self.fliped:
+            self.pos_x+=6
+        else:
+            self.pos_x-=6
+
+        #show animated image
+        self.elapsedTime += clock.get_time()
+        if self.elapsedTime < self.limitTime:
+            pass
+        else:
+            self.elapsedTime = 0
+
+            self.index+=1
+            if self.index >= len(self.spr.spr):
+                self.index=0
+
+            self.image=self.spr.spr[self.index]
+            if self.fliped:
+                self.image = pygame.transform.flip(self.image,True,False)
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -82,11 +130,13 @@ class Player(pygame.sprite.Sprite):
         elif self.pos_y > SCREEN_HEIGHT-size_Player[1]*4:
             self.pos_y = SCREEN_HEIGHT-size_Player[1]*4
 
+        #switch attacking / normal form
         if(self.attacking==True):
             self.images=self.spr_attacking
         else:
             self.images=self.spr_normal
-
+        
+        #show animated image and append flame class to group_Flame
         self.elapsedTime += clock.get_time()
         if self.elapsedTime < self.limitTime:
             pass
@@ -95,6 +145,10 @@ class Player(pygame.sprite.Sprite):
             self.index+=1
             if self.index >=len(self.images):
                 self.index=0
+            
+            if self.attacking==True and self.index==7:
+                group_Flame.append(Flame(self.pos_x,self.pos_y,self.fliped))
+
             if(self.fliped==True):
                 self.image = pygame.transform.flip(self.images[self.index],True,False)
             else:
