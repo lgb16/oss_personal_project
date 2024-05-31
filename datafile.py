@@ -15,6 +15,7 @@ SCORE_HEIGHT = 100
 
 size_Grass = [32,32]
 size_Player = [20,20]
+size_Flame = [24,24]
 
 clock=pygame.time.Clock()
 
@@ -31,15 +32,7 @@ class SpriteSheet:
         image_scaled = pygame.transform.scale(image,(size[0]*4,size[1]*4))
         image_scaled.set_colorkey(black)
         self.spr.append(image_scaled)
-'''
-        for i in range(max_index):
-            image = pygame.Surface((width, height))
-            image.blit(baseImage, (0, 0),
-                    ((i%max_row)*width, (i//max_row)*height, width, height))
-            image_scaled = pygame.transform.scale(image,(width*4,height*4))
-            image_scaled.set_colorkey(black)
-            self.spr.append(image_scaled)
-'''
+
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -79,6 +72,16 @@ class Player(pygame.sprite.Sprite):
         self.images=[pygame.transform.flip(image,True,False) for image in self.images]
 
     def update(self):
+        #check boundary
+        if self.pos_x < 0:
+            self.pos_x = 0
+        elif self.pos_x > SCREEN_WIDTH-size_Player[0]*4:
+            self.pos_x = SCREEN_WIDTH-size_Player[0]*4
+        if self.pos_y < SCORE_HEIGHT:
+            self.pos_y = SCORE_HEIGHT
+        elif self.pos_y > SCREEN_HEIGHT-size_Player[1]*4:
+            self.pos_y = SCREEN_HEIGHT-size_Player[1]*4
+
         if(self.attacking==True):
             self.images=self.spr_attacking
         else:
