@@ -34,7 +34,7 @@ while True:
     if key_event[pygame.K_DOWN]:
         player.pos_y +=3
 
-    if key_event[pygame.K_SPACE]:
+    if key_event[pygame.K_a]:
         player.attacking = True
     else:
         player.attacking = False

@@ -16,15 +16,24 @@ SCORE_HEIGHT = 100
 Grass_WIDTH = 32
 Grass_HEIGHT=32
 
+size_Player = [20,20]
+
 clock=pygame.time.Clock()
 
 #Font=pygame.font.SysFont("arial",30,True,False)
 
 class SpriteSheet:
-    def __init__(self, filename, width, height, max_row, max_col, max_index):
+    def __init__(self, filename):
         baseImage = pygame.image.load(os.path.join(DIR_IMAGE, filename))
         self.spr = []
 
+    def get_image(self,x,y,size)
+        image = pygame.Surface(size)
+        image.blit(baseImage, (0, 0), x, y, size[0], size[1])
+        image_scaled = pygame.transform.scale(image,(size[0]*4,size[1]*4))
+        image_scaled.set_colorkey(black)
+        self.spr.append(image_scaled)
+'''
         for i in range(max_index):
             image = pygame.Surface((width, height))
             image.blit(baseImage, (0, 0),
@@ -32,7 +41,7 @@ class SpriteSheet:
             image_scaled = pygame.transform.scale(image,(width*4,height*4))
             image_scaled.set_colorkey(black)
             self.spr.append(image_scaled)
-
+'''
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -41,7 +50,12 @@ class Player(pygame.sprite.Sprite):
         self.limitTime = 1000/20
         
         self.index=0
-        self.spr = SpriteSheet('phoenix-cc0-spritesheet.png',20,20,5,4,19)
+        self.spr = SpriteSheet('phoenix-cc0-spritesheet.png')
+
+        for i in range(4):
+            for j in range(5):
+                self.spr.get_image(j*size_Player[0],i*size_Player[1],size_Player)
+
         self.spr_normal = [
             self.spr.spr[0],self.spr.spr[2],self.spr.spr[1],
             self.spr.spr[2],self.spr.spr[0],self.spr.spr[0],
