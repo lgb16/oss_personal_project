@@ -13,9 +13,7 @@ SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 960
 SCORE_HEIGHT = 100
 
-Grass_WIDTH = 32
-Grass_HEIGHT=32
-
+size_Grass = [32,32]
 size_Player = [20,20]
 
 clock=pygame.time.Clock()

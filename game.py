@@ -10,7 +10,7 @@ Font=pygame.font.Font(None,50)
 start_tick = pygame.time.get_ticks()
 
 background_spr=SpriteSheet('Grass.png')
-background_spr.get_image(0,0,[32,32])
+background_spr.get_image(0,0,size_Grass)
 player=Player()
 
 while True:
@@ -45,10 +45,10 @@ while True:
     y=0
     while y < SCREEN_HEIGHT:
         screen.blit(background_spr.spr[0],(x,y))
-        x+=Grass_WIDTH
+        x+=size_Grass[0]
         if x >= SCREEN_WIDTH:
             x=0
-            y+=Grass_HEIGHT
+            y+=size_Grass[1]
   
     pygame.draw.rect(screen, black, [0,0,SCREEN_WIDTH,SCORE_HEIGHT])
 
