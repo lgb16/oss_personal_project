@@ -24,12 +24,12 @@ clock=pygame.time.Clock()
 
 class SpriteSheet:
     def __init__(self, filename):
-        baseImage = pygame.image.load(os.path.join(DIR_IMAGE, filename))
+        self.baseImage = pygame.image.load(os.path.join(DIR_IMAGE, filename))
         self.spr = []
 
-    def get_image(self,x,y,size)
+    def get_image(self,x,y,size):
         image = pygame.Surface(size)
-        image.blit(baseImage, (0, 0), x, y, size[0], size[1])
+        image.blit(self.baseImage, (0, 0), (x, y, size[0], size[1]))
         image_scaled = pygame.transform.scale(image,(size[0]*4,size[1]*4))
         image_scaled.set_colorkey(black)
         self.spr.append(image_scaled)

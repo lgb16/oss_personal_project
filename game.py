@@ -9,7 +9,8 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 Font=pygame.font.Font(None,50)
 start_tick = pygame.time.get_ticks()
 
-background_spr=SpriteSheet('Grass.png',Grass_WIDTH,Grass_HEIGHT,1,1,1)
+background_spr=SpriteSheet('Grass.png')
+background_spr.get_image(0,0,[32,32])
 player=Player()
 
 while True:
