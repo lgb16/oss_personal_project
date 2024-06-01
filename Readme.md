@@ -21,11 +21,11 @@
 ### datafile.py
 - 게임 실행에 필요한 여러 전역 변수 및 클래스를 선언해둔 파일
 - Spritesheet : spritesheet를 받아 여러 image로 나누어 저장하는 class
-1.Def __init__ : SpriteSheet 초기화, spr에 이미지를 나누어 저장, 처음에는 spr 리스트는 비어있음
-2.Def get image : 주어진 좌표에 크기, 배율에 따라 spritesheet에서 이미지를 추출에 spr리스트에 저장
+	+Def __init__ : SpriteSheet 초기화, spr에 이미지를 나누어 저장, 처음에는 spr 리스트는 비어있음
+	+Def get image : 주어진 좌표에 크기, 배율에 따라 spritesheet에서 이미지를 추출에 spr리스트에 저장
 - Flame, Player, Enemy : 각각 플레이어의 공격, 플레이어, 적 몬스터를 담당하는 class, pygame.sprite.Sprite를 상속함
-1.Def __init__ : image를 불러와 초기화 및 주어진 좌표와 방향값으로 초기화
-2.Def update : image의 위치와 애니메이션을 시간에 따라 업데이트 하기 위한 함수
+	+Def __init__ : image를 불러와 초기화 및 주어진 좌표와 방향값으로 초기화
+	+Def update : image의 위치와 애니메이션을 시간에 따라 업데이트 하기 위한 함수
 
 ### game.py
 - 게임이 실행되는 파일
