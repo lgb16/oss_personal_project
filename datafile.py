@@ -13,6 +13,7 @@ SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 960
 SCORE_HEIGHT = 100
 
+#declare all size of images
 size_Grass = [32,32]
 size_Player = [20,20]
 size_Flame = [24,24]
@@ -20,8 +21,12 @@ size_Enemy = [48,64]
 
 clock=pygame.time.Clock()
 
+#class list
 group_Flame = []
 group_Enemy = []
+
+score = 0
+start=True
 
 class SpriteSheet:
     def __init__(self, filename):
@@ -61,6 +66,9 @@ class Flame(pygame.sprite.Sprite):
         #check boundary
         if self.pos_x < -2*size_Flame[0] or self.pos_x > SCREEN_WIDTH:
             self.out_boundary=True
+        
+        #update rect
+        self.rect = self.image.get_rect(center=(self.pos_x,self.pos_y))
 
         #update position
         if self.fliped:
@@ -131,6 +139,9 @@ class Player(pygame.sprite.Sprite):
             self.pos_y = SCORE_HEIGHT
         elif self.pos_y > SCREEN_HEIGHT-size_Player[1]*4:
             self.pos_y = SCREEN_HEIGHT-size_Player[1]*4
+
+        #update rect
+        self.rect = self.image.get_rect(center=(self.pos_x,self.pos_y))
 
         #switch attacking / normal form
         if(self.attacking==True):
@@ -207,6 +218,9 @@ class Enemy(pygame.sprite.Sprite):
             self.pos_x+=self.velocity*f
         else:
             self.pos_x+=1*f
+
+        #update rect
+        self.rect = self.image.get_rect(center=(self.pos_x,self.pos_y))
 
         #show animated image
         self.elapsedTime += clock.get_time()
