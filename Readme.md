@@ -5,9 +5,10 @@
 
 #지원 Operating Systems
 |OS| 지원 여부 |
-|windows|:x:|
-|Linus|:0:|
-|MacOS|:x:|
+|-----|--------|
+|windows | :x:  |
+| Linux  | :o: |
+|MacOS  | :x:  |
 
 #실행 방법
 ### Linux
