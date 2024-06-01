@@ -25,9 +25,6 @@ clock=pygame.time.Clock()
 group_Flame = []
 group_Enemy = []
 
-score = 0
-start=True
-
 class SpriteSheet:
     def __init__(self, filename):
         self.baseImage = pygame.image.load(os.path.join(DIR_IMAGE, filename))
@@ -128,6 +125,14 @@ class Player(pygame.sprite.Sprite):
 
     def flip_image(self):
         self.images=[pygame.transform.flip(image,True,False) for image in self.images]
+
+    def reset(self):
+        self.pos_x=SCREEN_WIDTH/2-40
+        self.pos_y=SCREEN_HEIGHT/2-40
+        self.fliped = False
+        self.attacking = False
+        self.images = self.spr_normal
+        self.rect = self.image.get_rect(center=(self.pos_x,self.pos_y))
 
     def update(self):
         #check boundary
