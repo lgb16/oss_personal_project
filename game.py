@@ -1,4 +1,4 @@
-import pygame,sys,time
+import pygame,sys,random
 from datafile import *
 
 #initialize window
@@ -13,13 +13,10 @@ background_spr=SpriteSheet('Grass.png')
 background_spr.get_image(0,0,size_Grass,1)
 player=Player()
 
-group_Enemy.append(Enemy(1,200,200,False))
-group_Enemy.append(Enemy(2,200,300,False))
-group_Enemy.append(Enemy(3,200,400,False))
-
 score = 0
 start_tick = 0
 Time = 0
+last_spawn_Time = 0
 start=False
 end=False
 
@@ -45,6 +42,25 @@ def start_Game():
         player.attacking = True
     else:
         player.attacking = False
+
+    #add random enemy
+    global last_spawn_Time
+    if Time-last_spawn_Time >= 1:
+        if Time >= 180:
+            Type=random.randrange(1,19)//6+1
+        else:
+            Type=random.randrange(1,2+Time//5)//6+1
+
+        if random.randrange(1,3)==1:
+            fliped=False
+            x=-size_Enemy[0]*1.5
+        else:
+            fliped=True
+            x=SCREEN_WIDTH+size_Enemy[0]*1.5
+        y=random.randrange(SCORE_HEIGHT+20,SCREEN_HEIGHT-size_Enemy[1]-20)
+
+        group_Enemy.append(Enemy(Type,x,y,fliped))
+        last_spawn_Time=Time
 
     #check collide player and enemy
     for enemy in group_Enemy:
@@ -72,20 +88,24 @@ def start_Game():
     player.update()
     for enemy in group_Enemy:
         enemy.update()
+        if enemy.out_boundary:
+            group_Enemy.remove(enemy)
 
     pygame.display.update()
 
 def reset():
-    global player, group_Enemy, group_Flame
+    global player, group_Enemy, group_Flame, score, last_spawn_Time
     del group_Enemy[0:]
     del group_Flame[0:]
     player.reset()
+    score=0
+    last_spawn_Time=0
 
 while True:
     clock.tick(60)
 
     if start and not end:
-        Time=pygame.time.get_ticks()-start_tick
+        Time=(pygame.time.get_ticks()-start_tick)//1000
         start_Game()
 
     for event in pygame.event.get():
@@ -98,11 +118,7 @@ while True:
                     reset()
                 start_tick=pygame.time.get_ticks()
                 start=True
-    '''
-    if start==True:
-        Time=pygame.time.get_ticks()-start_tick
-        start_Game()
-    '''
+    
     #fill screen background and scoreboard
     x=0
     y=0
@@ -115,7 +131,7 @@ while True:
 
     pygame.draw.rect(screen, black, [0,0,SCREEN_WIDTH,SCORE_HEIGHT])
 
-    text_time=Font.render("TIME : "+str(Time//1000),True,white)
+    text_time=Font.render("TIME : "+str(Time),True,white)
     screen.blit(text_time,(30,30))
 
     text_score=Font.render("SCORE : "+str(score),True,white)

@@ -184,6 +184,7 @@ class Enemy(pygame.sprite.Sprite):
         self.health = 0
         self.velocity = 0.0
         self.score = 0
+        self.out_boundary = False
         y_index = 0
         if self.Type == 1:
             self.health = 1
@@ -196,13 +197,13 @@ class Enemy(pygame.sprite.Sprite):
             self.score=300
             y_index = 2
         elif self.Type == 3:
-            self.health = 4
+            self.health = 3
             self.velocity = 1
             self.score = 700
             y_index = 4
 
         self.index = 0
-        self.spr = SpriteSheet('Slime.png')
+        self.spr = SpriteSheet('Slime2.png')
         for i in range(4):
             self.spr.get_image(67+64*i,73+64*y_index,size_Enemy,1.5)
 
@@ -223,6 +224,10 @@ class Enemy(pygame.sprite.Sprite):
             self.pos_x+=self.velocity*f
         else:
             self.pos_x+=1*f
+
+        #check out_boundary
+        if self.pos_x<-100 or self.pos_x>SCREEN_WIDTH+100:
+            self.out_boundary=True
 
         #update rect
         self.rect = self.image.get_rect(center=(self.pos_x,self.pos_y))
