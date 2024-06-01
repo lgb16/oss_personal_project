@@ -16,20 +16,22 @@ SCORE_HEIGHT = 100
 size_Grass = [32,32]
 size_Player = [20,20]
 size_Flame = [24,24]
+size_Enemy = [48,64]
 
 clock=pygame.time.Clock()
 
 group_Flame = []
+group_Enemy = []
 
 class SpriteSheet:
     def __init__(self, filename):
         self.baseImage = pygame.image.load(os.path.join(DIR_IMAGE, filename))
         self.spr = []
 
-    def get_image(self,x,y,size):
+    def get_image(self,x,y,size,magni):
         image = pygame.Surface(size)
         image.blit(self.baseImage, (0, 0), (x, y, size[0], size[1]))
-        image_scaled = pygame.transform.scale(image,(size[0]*4,size[1]*4))
+        image_scaled = pygame.transform.scale(image,(size[0]*magni,size[1]*magni))
         image_scaled.set_colorkey(black)
         self.spr.append(image_scaled)
 
@@ -37,7 +39,7 @@ class Flame(pygame.sprite.Sprite):
     def __init__(self, x, y, fliped):
         self.spr = SpriteSheet('Flame-spritesheet.png')
         for i in range(7):
-            self.spr.get_image(0,i*size_Flame[1],size_Flame)
+            self.spr.get_image(0,i*size_Flame[1],size_Flame,4)
 
         self.elapsedTime = 0
         self.limitTime = 1000/20
@@ -93,7 +95,7 @@ class Player(pygame.sprite.Sprite):
 
         for i in range(4):
             for j in range(5):
-                self.spr.get_image(j*size_Player[0],i*size_Player[1],size_Player)
+                self.spr.get_image(j*size_Player[0],i*size_Player[1],size_Player,4)
 
         self.spr_normal = [
             self.spr.spr[0],self.spr.spr[2],self.spr.spr[1],
@@ -153,3 +155,68 @@ class Player(pygame.sprite.Sprite):
                 self.image = pygame.transform.flip(self.images[self.index],True,False)
             else:
                 self.image = self.images[self.index]
+
+class Enemy(pygame.sprite.Sprite):
+    def __init__(self,Type,x,y,fliped):
+        pygame.sprite.Sprite.__init__(self)
+
+        self.elapsedTime = 0
+        self.limitTime = 1000/8
+        
+        #set enemy type information : Type 1(blue), 2(yellow), 3(violet)
+        self.Type = Type
+        self.health = 0
+        self.velocity = 0.0
+        self.score = 0
+        y_index = 0
+        if self.Type == 1:
+            self.health = 1
+            self.velocity = 1.5
+            self.score=100
+            y_index=0
+        elif self.Type == 2:
+            self.health = 2
+            self.velocity = 3
+            self.score=300
+            y_index = 2
+        elif self.Type == 3:
+            self.health = 4
+            self.velocity = 1
+            self.score = 700
+            y_index = 4
+
+        self.index = 0
+        self.spr = SpriteSheet('Slime.png')
+        for i in range(4):
+            self.spr.get_image(67+64*i,73+64*y_index,size_Enemy,1.5)
+
+        self.pos_x = x
+        self.pos_y = y
+        self.fliped = fliped
+
+        self.images = self.spr.spr
+        self.image = self.spr.spr[0]
+        self.rect = self.image.get_rect(center=(self.pos_x,self.pos_y))
+
+    def update(self):
+        #update position
+        f=1
+        if self.fliped:
+            f=-1
+        if self.index%2==1:
+            self.pos_x+=self.velocity*f
+        else:
+            self.pos_x+=1*f
+
+        #show animated image
+        self.elapsedTime += clock.get_time()
+        if self.elapsedTime < self.limitTime:
+            pass
+        else:
+            self.elapsedTime = 0
+            
+            self.index+=1
+            if self.index >=len(self.images):
+                self.index=0
+            
+            self.image = self.images[self.index]

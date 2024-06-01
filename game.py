@@ -11,8 +11,12 @@ start_tick = pygame.time.get_ticks()
 
 #declare data classes for game
 background_spr=SpriteSheet('Grass.png')
-background_spr.get_image(0,0,size_Grass)
+background_spr.get_image(0,0,size_Grass,1)
 player=Player()
+
+group_Enemy.append(Enemy(1,200,200,False))
+group_Enemy.append(Enemy(2,200,300,False))
+group_Enemy.append(Enemy(3,200,400,False))
 
 while True:
     clock.tick(60)
@@ -69,5 +73,10 @@ while True:
     #show player
     player.update()
     screen.blit(player.image, (player.pos_x, player.pos_y))
+
+    #show enemy
+    for enemy in group_Enemy:
+        enemy.update()
+        screen.blit(enemy.image, (enemy.pos_x, enemy.pos_y))
 
     pygame.display.update()
