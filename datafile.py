@@ -199,7 +199,7 @@ class Enemy(pygame.sprite.Sprite):
         elif self.Type == 3:
             self.health = 3
             self.velocity = 1
-            self.score = 700
+            self.score = 500
             y_index = 4
 
         self.index = 0
