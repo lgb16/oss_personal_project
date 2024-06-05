@@ -3,28 +3,31 @@
 # Reference
 [1] https://github.com/pygame/pygame "pygame"
 
-#지원 Operating Systems
+# 지원 Operating Systems
 |OS| 지원 여부 |
 |-----|--------|
 |windows | :x:  |
 | Linux  | :o: |
 |MacOS  | :x:  |
 
-#실행 방법
+# 실행 방법
 ### Linux
 
 1. python3을 설치한다
-2. game.py 파일에 권한을 준다 ( $:chmod 755 game.py )
-3. game.py 파일을 python3를 통해 실행한다 ( $:python3 game.py )
+2. pygame을 설치한다( $:pip3 install pygame )
+3. game.py 파일에 권한을 준다 ( $:chmod 755 game.py )
+4. game.py 파일을 python3를 통해 실행한다 ( $:python3 game.py )
 
-#How to Play
+# How to Play
 1. 게임 실행시 스페이스바를 누르는것으로 시작할 수 있다
 2. 이동은 방향키, 공격은 a키이다
 3. 주어진 시간은 2분이며, 시간내에 높은 점수를 얻는 것을 목표로 한다
 	+ 파란 슬라임은 100점, 노란 슬라임은 300점, 보라 슬라임은 500점
 	+ 게임 오버 조건은 2분이 지나거나 슬라임에 충돌판정이 나면 종료한다
 
-#코드 설명
+![gameplay](https://github.com/lgb16/oss_personal_project/assets/164156799/d17acac8-85a6-440f-ac60-6c068b96bb9c)
+
+# 코드 설명
 ### datafile.py
 - 게임 실행에 필요한 여러 전역 변수 및 클래스를 선언해둔 파일
 - Spritesheet : spritesheet를 받아 여러 image로 나누어 저장하는 class
