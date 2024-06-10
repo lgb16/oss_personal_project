@@ -1,5 +1,5 @@
 import pygame, os
-import random
+import math, random
 
 DIR_PATH = os.path.dirname(__file__)
 DIR_IMAGE = os.path.join(DIR_PATH, 'image')
@@ -20,11 +20,20 @@ size_Player = [20,20]
 size_Flame = [24,24]
 size_Enemy = [48,64]
 
+################ Phase 2 Start ################
+size_Experience = [16,16]
+################ Phase 2 End ################
+
+
 clock=pygame.time.Clock()
 
 #class list
 group_Flame = []
 group_Enemy = []
+
+################ Phase 2 Start ################
+group_Experience = []
+################ Phase 2 End ################
 
 class SpriteSheet:
     def __init__(self, filename):
@@ -37,6 +46,41 @@ class SpriteSheet:
         image_scaled = pygame.transform.scale(image,(size[0]*magni,size[1]*magni))
         image_scaled.set_colorkey(black)
         self.spr.append(image_scaled)
+
+################ Phase 2 Start ################
+class Experience(pygame.sprite.Sprite):
+    def __init__(self, x, y, level):
+        self.spr = SpriteSheet('Experience.png')
+        for i in range(3):
+            self.spr.get_image(i*size_Experience[0],0,size_Experience,2)
+
+        self.amount = level + 1
+        self.image = self.spr.spr[level]
+
+        self.pos_x = x + size_Enemy[0] // 2
+        self.pos_y = y + size_Enemy[1] // 2
+
+        self.velocity = pygame.math.Vector2(0, 0)
+        self.collected = False
+
+    def update(self, player_pos):
+        player_x = player_pos[0] + size_Player[0] // 2
+        player_y = player_pos[1] + size_Player[1] // 2
+
+        distance = math.sqrt((player_x - self.pos_x) ** 2 + (player_y - self.pos_y) ** 2)
+        if distance < 80:
+            acc = pygame.math.Vector2(player_x - self.pos_x, player_y - self.pos_y)
+            self.velocity += acc.normalize() * 0.2
+
+            if distance < 20:
+                self.collected = True
+        else:
+            self.velocity *= 0.9
+
+        self.pos_x += self.velocity.x
+        self.pos_y += self.velocity.y
+
+################ Phase 2 End ################
 
 class Flame(pygame.sprite.Sprite):
     def __init__(self, x, y, fliped):
@@ -124,7 +168,13 @@ class Player(pygame.sprite.Sprite):
         self.image = self.images[self.index]
         self.rect = self.image.get_rect(center=(self.pos_x,self.pos_y))
 
+        ################ Phase 2 Start ################
         self.hp = 100
+
+        self.level = 1
+        self.exp = 0
+        self.required_exp = 5
+        ################ Phase 2 End ################
 
     def flip_image(self):
         self.images=[pygame.transform.flip(image,True,False) for image in self.images]
@@ -139,6 +189,10 @@ class Player(pygame.sprite.Sprite):
 
         ################ Phase 2 Start ################
         self.hp = 100
+
+        self.level = 1
+        self.exp = 0
+        self.required_exp = 5
         ################ Phase 2 End ################
 
     def update(self):

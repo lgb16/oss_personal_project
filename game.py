@@ -89,6 +89,11 @@ def start_Game():
                     score+=enemy.score
                     group_Enemy.remove(enemy)
 
+                    ################ Phase 2 Start ################
+                    level = enemy.Type-1
+                    group_Experience.append(Experience(enemy.pos_x,enemy.pos_y,level))
+                    ################ Phase 2 End ################
+
     #update all classes
     for flame in group_Flame:
         flame.update()
@@ -103,10 +108,29 @@ def start_Game():
         if enemy.out_boundary:
             group_Enemy.remove(enemy)
 
+    ################ Phase 2 Start ################
+    for exp in group_Experience:
+        exp.update((player.pos_x, player.pos_y))
+        if exp.collected:
+            player.exp += exp.amount
+            group_Experience.remove(exp)
+
+            if player.exp >= player.required_exp:
+                player.level += 1
+                player.exp = player.exp % player.required_exp
+                player.required_exp += 10
+    ################ Phase 2 End ################
+
+
     pygame.display.update()
 
 def reset():
     global player, group_Enemy, group_Flame, score, Time, last_spawn_Time
+    ################ Phase 2 Start ################
+    global group_Experience
+    del group_Experience[0:]
+    ################ Phase 2 End ################
+
     del group_Enemy[0:]
     del group_Flame[0:]
     player.reset()
@@ -167,6 +191,11 @@ while True:
     for flame in group_Flame:
         screen.blit(flame.image,(flame.pos_x,flame.pos_y))
     screen.blit(player.image,(player.pos_x,player.pos_y))
+
+    ################ Phase 2 Start ################
+    for exp in group_Experience:
+        screen.blit(exp.image, (exp.pos_x, exp.pos_y))
+    ################ Phase 2 End ################
     ################ Phase 2 Start ################
     red = (255, 0, 0)
     green = (0, 255, 0)
@@ -181,6 +210,23 @@ while True:
     green_bar_width = (player.hp / 100) * bar_width
     pygame.draw.rect(screen, red, (bar_x, bar_y, bar_width, bar_height))
     pygame.draw.rect(screen, green, (bar_x, bar_y, green_bar_width, bar_height))
+    ################ Phase 2 End ################
+
+    ################ Phase 2 Start ################
+    blue = (0, 0, 255)
+    bar_width = SCREEN_WIDTH
+    bar_height = 20
+
+    bar_x = 0
+    bar_y = SCORE_HEIGHT - bar_height
+
+    blue_bar_width = (player.exp / player.required_exp) * bar_width
+    pygame.draw.rect(screen, black, (bar_x, bar_y, bar_width, bar_height))
+    pygame.draw.rect(screen, blue, (bar_x, bar_y, blue_bar_width, bar_height))
+
+    font = pygame.font.Font(None, 24)
+    text = font.render("LV " + str(player.level), True, white)
+    screen.blit(text, (bar_x + 10, bar_y + 4))
     ################ Phase 2 End ################
 
     for enemy in score_Enemy:
