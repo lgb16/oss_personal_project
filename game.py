@@ -69,9 +69,13 @@ def start_Game():
     #check collide player and enemy
     for enemy in group_Enemy:
         if pygame.sprite.collide_mask(player, enemy):
-            global start, end
-            start=False
-            end=True
+            ############### Phase 2 Start ################
+            player.hp -= 1
+            if player.hp <= 0:
+            ################ Phase 2 End ################
+                global start, end
+                start=False
+                end=True
 
     #check collide flame and ememy
     for flame in group_Flame:
@@ -163,6 +167,21 @@ while True:
     for flame in group_Flame:
         screen.blit(flame.image,(flame.pos_x,flame.pos_y))
     screen.blit(player.image,(player.pos_x,player.pos_y))
+    ################ Phase 2 Start ################
+    red = (255, 0, 0)
+    green = (0, 255, 0)
+    bar_width = 64
+    bar_height = 10
+
+    center_x, center_y = player.rect.center
+    bar_x = center_x - bar_width // 2 + 44
+    bar_y = center_y + 85
+    hp = player.hp
+
+    green_bar_width = (player.hp / 100) * bar_width
+    pygame.draw.rect(screen, red, (bar_x, bar_y, bar_width, bar_height))
+    pygame.draw.rect(screen, green, (bar_x, bar_y, green_bar_width, bar_height))
+    ################ Phase 2 End ################
 
     for enemy in score_Enemy:
         screen.blit(enemy.image,(enemy.pos_x,enemy.pos_y))

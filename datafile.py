@@ -137,6 +137,10 @@ class Player(pygame.sprite.Sprite):
         self.images = self.spr_normal
         self.rect = self.image.get_rect(center=(self.pos_x,self.pos_y))
 
+        ################ Phase 2 Start ################
+        self.hp = 100
+        ################ Phase 2 End ################
+
     def update(self):
         #check boundary
         if self.pos_x < 0:
