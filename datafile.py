@@ -1,4 +1,5 @@
 import pygame, os
+import random
 
 DIR_PATH = os.path.dirname(__file__)
 DIR_IMAGE = os.path.join(DIR_PATH, 'image')
@@ -123,6 +124,8 @@ class Player(pygame.sprite.Sprite):
         self.image = self.images[self.index]
         self.rect = self.image.get_rect(center=(self.pos_x,self.pos_y))
 
+        self.hp = 100
+
     def flip_image(self):
         self.images=[pygame.transform.flip(image,True,False) for image in self.images]
 
@@ -215,15 +218,31 @@ class Enemy(pygame.sprite.Sprite):
         self.image = self.spr.spr[0]
         self.rect = self.image.get_rect(center=(self.pos_x,self.pos_y))
 
-    def update(self):
+        ################ Phase 2 Start ################
+        self.chase = random.choice([True, False])
+        ################ Phase 2 End ################
+
+    def update(self, player_pos):
         #update position
-        f=1
-        if self.fliped:
-            f=-1
-        if self.index%2==1:
-            self.pos_x+=self.velocity*f
+        ################ Phase 2 Start ################
+        if self.chase:
+            if player_pos[0] > self.pos_x:
+                self.pos_x += self.velocity
+            elif player_pos[0] < self.pos_x:
+                self.pos_x -= self.velocity
+            if player_pos[1] > self.pos_y:
+                self.pos_y += self.velocity
+            elif player_pos[1] < self.pos_y:
+                self.pos_y -= self.velocity
+        ################ Phase 2 End ################
         else:
-            self.pos_x+=1*f
+            f=1
+            if self.fliped:
+                f=-1
+            if self.index%2==1:
+                self.pos_x+=self.velocity*f
+            else:
+                self.pos_x+=1*f
 
         #check out_boundary
         if self.pos_x<-100 or self.pos_x>SCREEN_WIDTH+100:

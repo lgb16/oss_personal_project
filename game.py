@@ -92,7 +92,10 @@ def start_Game():
             group_Flame.remove(flame)
     player.update()
     for enemy in group_Enemy:
-        enemy.update()
+        # enemy.update()
+        ################ Phase 2 Start ################
+        enemy.update((player.pos_x, player.pos_y))
+        ################ Phase 2 End ################
         if enemy.out_boundary:
             group_Enemy.remove(enemy)
 
