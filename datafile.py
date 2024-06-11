@@ -199,7 +199,8 @@ class Garlic(pygame.sprite.Sprite):
         
     def is_in_range(self, enemy):
         distance = math.sqrt((self.pos_x - enemy.pos_x) ** 2 + (self.pos_y - enemy.pos_y) ** 2)
-        return distance < self.range
+        damage_range = self.range + size_Enemy[0] // 2
+        return distance < damage_range
 
 ################ Phase 2 End ################
 
@@ -354,6 +355,14 @@ class Enemy(pygame.sprite.Sprite):
         for i in range(4):
             self.spr.get_image(67+64*i,73+64*y_index,size_Enemy,1.5)
 
+        ################ Phase 2 Start ################
+        self.hit_spr = SpriteSheet('Slime2.png')
+        for i in range(4):
+            self.hit_spr.get_image(67+64*i,73+64*11,size_Enemy,1.5)
+
+        self.hit_tick = 0
+        ################ Phase 2 End ################
+
         self.pos_x = x
         self.pos_y = y
         self.fliped = fliped
@@ -407,3 +416,9 @@ class Enemy(pygame.sprite.Sprite):
                 self.index=0
             
             self.image = self.images[self.index]
+
+            ################ Phase 2 Start ################
+            if self.hit_tick > 0:
+                self.hit_tick -= 1
+                self.image = self.hit_spr.spr[self.index]
+            ################ Phase 2 End ################

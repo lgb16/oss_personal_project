@@ -87,30 +87,16 @@ def start_Game():
         for enemy in group_Enemy:
             if pygame.sprite.collide_mask(flame, enemy):
                 enemy.health-=1
+                enemy.hit_tick = 3
                 if flame in group_Flame:
                     group_Flame.remove(flame)
-                if enemy.health <= 0:
-                    global score
-                    score+=enemy.score
-                    group_Enemy.remove(enemy)
-
-                    ################ Phase 2 Start ################
-                    level = enemy.Type-1
-                    group_Experience.append(Experience(enemy.pos_x,enemy.pos_y,level))
-                    ################ Phase 2 End ################
 
     ################ Phase 2 Start ################
     for axe in group_Axe:
         for enemy in group_Enemy:
             if pygame.sprite.collide_mask(axe, enemy):
                 enemy.health -= 0.2
-                if enemy.health <= 0:
-                    score += enemy.score
-                    group_Enemy.remove(enemy)
-
-                    level = enemy.Type - 1
-                    group_Experience.append(Experience(enemy.pos_x, enemy.pos_y, level))
-
+                enemy.hit_tick = 3
     ################ Phase 2 End ################
 
     ################ Phase 2 Start ################
@@ -121,12 +107,19 @@ def start_Game():
     for enemy in group_Enemy:
         if garlic.is_in_range(enemy):
             enemy.health -= 0.1
-            if enemy.health <= 0:
-                score += enemy.score
-                group_Enemy.remove(enemy)
+            enemy.hit_tick = 3
 
-                level = enemy.Type - 1
-                group_Experience.append(Experience(enemy.pos_x, enemy.pos_y, level))
+    ################ Phase 2 End ################
+
+    ################ Phase 2 Start ################
+    global score
+    for enemy in group_Enemy:
+        if enemy.health <= 0:
+            score += enemy.score
+            group_Enemy.remove(enemy)
+
+            level = enemy.Type - 1
+            group_Experience.append(Experience(enemy.pos_x, enemy.pos_y, level))
     
     ################ Phase 2 End ################
 
