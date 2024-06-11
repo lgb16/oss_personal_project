@@ -24,6 +24,11 @@ last_spawn_Time = 0
 start=False
 end=False
 
+############### Phase 2 Start ################
+upgrading = False
+upgrade_choice = 0
+################ Phase 2 End ################
+
 def start_Game():
     key_event = pygame.key.get_pressed()
     if key_event[pygame.K_LEFT]:
@@ -94,6 +99,19 @@ def start_Game():
                     group_Experience.append(Experience(enemy.pos_x,enemy.pos_y,level))
                     ################ Phase 2 End ################
 
+    ################ Phase 2 Start ################
+    for axe in group_Axe:
+        for enemy in group_Enemy:
+            if pygame.sprite.collide_mask(axe, enemy):
+                enemy.health -= 0.1
+                if enemy.health <= 0:
+                    score += enemy.score
+                    group_Enemy.remove(enemy)
+
+                    level = enemy.Type - 1
+                    group_Experience.append(Experience(enemy.pos_x, enemy.pos_y, level))
+    ################ Phase 2 End ################
+
     #update all classes
     for flame in group_Flame:
         flame.update()
@@ -119,6 +137,11 @@ def start_Game():
                 player.level += 1
                 player.exp = player.exp % player.required_exp
                 player.required_exp += 10
+
+    for axe in group_Axe:
+        axe.update()
+        if axe.out_boundary:
+            group_Axe.remove(axe)
     ################ Phase 2 End ################
 
 
@@ -195,6 +218,9 @@ while True:
     ################ Phase 2 Start ################
     for exp in group_Experience:
         screen.blit(exp.image, (exp.pos_x, exp.pos_y))
+
+    for axe in group_Axe:
+        screen.blit(axe.image, axe.rect.topleft)
     ################ Phase 2 End ################
     ################ Phase 2 Start ################
     red = (255, 0, 0)
