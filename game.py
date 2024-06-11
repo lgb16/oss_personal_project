@@ -103,13 +103,31 @@ def start_Game():
     for axe in group_Axe:
         for enemy in group_Enemy:
             if pygame.sprite.collide_mask(axe, enemy):
-                enemy.health -= 0.1
+                enemy.health -= 0.2
                 if enemy.health <= 0:
                     score += enemy.score
                     group_Enemy.remove(enemy)
 
                     level = enemy.Type - 1
                     group_Experience.append(Experience(enemy.pos_x, enemy.pos_y, level))
+
+    ################ Phase 2 End ################
+
+    ################ Phase 2 Start ################
+    if len(group_Garlic) == 0:
+        group_Garlic.append(Garlic(player.pos_x, player.pos_y))
+
+    garlic = group_Garlic[0]
+    for enemy in group_Enemy:
+        if garlic.is_in_range(enemy):
+            enemy.health -= 0.1
+            if enemy.health <= 0:
+                score += enemy.score
+                group_Enemy.remove(enemy)
+
+                level = enemy.Type - 1
+                group_Experience.append(Experience(enemy.pos_x, enemy.pos_y, level))
+    
     ################ Phase 2 End ################
 
     #update all classes
@@ -142,16 +160,21 @@ def start_Game():
         axe.update()
         if axe.out_boundary:
             group_Axe.remove(axe)
+
+    for garlic in group_Garlic:
+        garlic.update((player.pos_x, player.pos_y))
     ################ Phase 2 End ################
 
 
     pygame.display.update()
 
 def reset():
-    global player, group_Enemy, group_Flame, score, Time, last_spawn_Time
+    global player, group_Enemy, group_Flame, group_Axe, group_Garlic, score, Time, last_spawn_Time
     ################ Phase 2 Start ################
     global group_Experience
     del group_Experience[0:]
+    del group_Axe[0:]
+    del group_Garlic[0:]
     ################ Phase 2 End ################
 
     del group_Enemy[0:]
@@ -160,6 +183,7 @@ def reset():
     score=0
     Time=0
     last_spawn_Time=0
+
 
 while True:
     clock.tick(60)
@@ -221,7 +245,11 @@ while True:
 
     for axe in group_Axe:
         screen.blit(axe.image, axe.rect.topleft)
+
+    for garlic in group_Garlic:
+        screen.blit(garlic.image, garlic.rect.topleft)
     ################ Phase 2 End ################
+
     ################ Phase 2 Start ################
     red = (255, 0, 0)
     green = (0, 255, 0)
