@@ -35,6 +35,7 @@ group_Enemy = []
 ################ Phase 2 Start ################
 group_Experience = []
 group_Axe = []
+group_Garlic = []
 ################ Phase 2 End ################
 
 class SpriteSheet:
@@ -172,6 +173,33 @@ class Axe(pygame.sprite.Sprite):
         self.image = pygame.transform.rotate(self.sprite, self.angle)
         self.rect = self.image.get_rect(center=self.sprite.get_rect(topleft=(self.pos_x, self.pos_y)).center)
 
+################ Phase 2 End ################
+
+
+################ Phase 2 Start ################
+class Garlic(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        self.pos_x=x + size_Player[0] // 2
+        self.pos_y=y + size_Player[1] // 2
+
+        self.range = 100
+        self.image = pygame.Surface((self.range * 2, self.range * 2), pygame.SRCALPHA)
+        pygame.draw.circle(self.image, (255, 255, 255, 50), (self.range, self.range), self.range)
+        self.rect = self.image.get_rect(center=(self.pos_x, self.pos_y))
+
+    def update(self, player_pos):
+        self.pos_x = player_pos[0] + size_Player[0] // 2
+        self.pos_y = player_pos[1] + size_Player[1] // 2
+
+        center_x = self.pos_x - self.range // 2 - size_Player[0] // 2
+        center_y = self.pos_y - self.range // 2
+        self.image = pygame.Surface((self.range * 2, self.range * 2), pygame.SRCALPHA)
+        pygame.draw.circle(self.image, (255, 255, 255, 50), (self.range, self.range), self.range)
+        self.rect = self.image.get_rect(topleft=(center_x, center_y))
+        
+    def is_in_range(self, enemy):
+        distance = math.sqrt((self.pos_x - enemy.pos_x) ** 2 + (self.pos_y - enemy.pos_y) ** 2)
+        return distance < self.range
 
 ################ Phase 2 End ################
 
