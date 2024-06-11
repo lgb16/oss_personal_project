@@ -19,6 +19,7 @@ size_Grass = [32,32]
 size_Player = [20,20]
 size_Flame = [24,24]
 size_Enemy = [48,64]
+size_Axe = [128,128]
 
 ################ Phase 2 Start ################
 size_Experience = [16,16]
@@ -33,6 +34,7 @@ group_Enemy = []
 
 ################ Phase 2 Start ################
 group_Experience = []
+group_Axe = []
 ################ Phase 2 End ################
 
 class SpriteSheet:
@@ -133,6 +135,46 @@ class Flame(pygame.sprite.Sprite):
             if self.fliped:
                 self.image = pygame.transform.flip(self.image,True,False)
 
+
+################ Phase 2 Start ################
+class Axe(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        self.pos_x=x + size_Player[0] // 2 - size_Axe[0] // 2
+        self.pos_y=y + size_Player[1] // 2 - size_Axe[1] // 2
+
+        self.sprite = pygame.transform.scale(
+            pygame.image.load(os.path.join(DIR_IMAGE, 'Axe.png')),
+            size_Axe
+        )
+        self.image = self.sprite
+        self.rect = self.image.get_rect(center=(self.pos_x,self.pos_y))
+        self.velocity = pygame.math.Vector2(random.random() * 4 - 2, -10)
+        self.angle = 0
+
+        self.out_boundary=False
+
+    def update(self):
+        #check boundary
+        if self.pos_y > SCREEN_HEIGHT:
+            self.out_boundary=True
+
+        #update position
+        self.velocity.y += 0.3
+        self.pos_x+=self.velocity.x
+        self.pos_y+=self.velocity.y
+        
+        #update rect
+        if self.velocity.x > 0:
+            self.angle -= 5
+        else:
+            self.angle += 5
+
+        self.image = pygame.transform.rotate(self.sprite, self.angle)
+        self.rect = self.image.get_rect(center=self.sprite.get_rect(topleft=(self.pos_x, self.pos_y)).center)
+
+
+################ Phase 2 End ################
+
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -174,6 +216,12 @@ class Player(pygame.sprite.Sprite):
         self.level = 1
         self.exp = 0
         self.required_exp = 5
+
+        self.tick = 0
+        self.cooltime = {
+            "flame": 7,
+            "axe": 20 
+        }
         ################ Phase 2 End ################
 
     def flip_image(self):
@@ -225,8 +273,18 @@ class Player(pygame.sprite.Sprite):
             if self.index >=len(self.images):
                 self.index=0
             
-            if self.attacking==True and self.index==7:
-                group_Flame.append(Flame(self.pos_x,self.pos_y,self.fliped))
+            # Orginal code
+            # if self.attacking==True and self.index==7:
+            #    group_Flame.append(Flame(self.pos_x,self.pos_y,self.fliped))
+            ################ Phase 2 Start ################
+            self.tick += 1
+            if self.attacking==True:
+                if self.tick % self.cooltime["flame"] == 0:
+                    group_Flame.append(Flame(self.pos_x,self.pos_y,self.fliped))
+                if self.tick % self.cooltime["axe"] == 0:
+                    group_Axe.append(Axe(self.pos_x,self.pos_y))
+            
+            ################ Phase 2 End ################
 
             if(self.fliped==True):
                 self.image = pygame.transform.flip(self.images[self.index],True,False)
