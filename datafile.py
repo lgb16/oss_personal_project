@@ -37,7 +37,7 @@ group_Experience = []
 group_Axe = []
 group_Garlic = []
 
-upgrade_levels = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+upgrade_levels = [1, 0, 0, 0, 0, 0, 0, 0, 0]
 ################ Phase 2 End ################
 
 class SpriteSheet:
@@ -75,7 +75,7 @@ class Experience(pygame.sprite.Sprite):
         distance = math.sqrt((player_x - self.pos_x) ** 2 + (player_y - self.pos_y) ** 2)
         if distance < 80:
             acc = pygame.math.Vector2(player_x - self.pos_x, player_y - self.pos_y)
-            self.velocity += acc.normalize() * 0.2
+            self.velocity += acc.normalize() * 0.3
 
             if distance < 20:
                 self.collected = True
@@ -250,8 +250,8 @@ class Player(pygame.sprite.Sprite):
 
         self.tick = 0
         self.cooltime = {
-            "flame": 7,
-            "axe": 20 
+            "flame": 15,
+            "axe": 30 
         }
         ################ Phase 2 End ################
 
@@ -310,10 +310,15 @@ class Player(pygame.sprite.Sprite):
             ################ Phase 2 Start ################
             self.tick += 1
             if self.attacking==True:
-                if self.tick % self.cooltime["flame"] == 0:
-                    group_Flame.append(Flame(self.pos_x,self.pos_y,self.fliped))
-                if self.tick % self.cooltime["axe"] == 0:
-                    group_Axe.append(Axe(self.pos_x,self.pos_y))
+                if self.tick % math.floor(self.cooltime["flame"] * (0.85 ** upgrade_levels[2])) == 0:
+                    for i in range(upgrade_levels[0]):
+                        gap = size_Flame[1] * 0.6
+                        y = self.pos_y - gap * (upgrade_levels[0] - 1) + gap * i
+                        group_Flame.append(Flame(self.pos_x,y,self.fliped))
+                
+                if self.tick % math.floor(self.cooltime["axe"] * (0.85 ** upgrade_levels[5])) == 0:
+                    for _ in range(upgrade_levels[3]):
+                        group_Axe.append(Axe(self.pos_x,self.pos_y))
             
             ################ Phase 2 End ################
 
@@ -439,11 +444,11 @@ class Upgrade(pygame.sprite.Sprite):
             self.spr.get_image(1024*i, 0, (1024, 1024), 0.08)
         self.image = self.spr.spr[self.weapon_type]
 
-        self.value = [level + 1, 1.1 ** level, 0.9 ** level][self.upgrade_type]
+        self.value = [level, 1.15 ** level, 0.85 ** level][self.upgrade_type]
         if self.upgrade_type == 0:
             self.description = f"Increase projectile to {self.value}"
         elif self.upgrade_type == 1:
-            self.description = f"Increase damage by {self.value} times"
+            self.description = f"Increase damage by {self.value:.2f} times"
         elif self.upgrade_type == 2:
-            self.description = f"Decrease cooldown by {self.value} times"
+            self.description = f"Decrease cooldown by {self.value:.2f} times"
 ################ Phase 2 End ################

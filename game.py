@@ -34,7 +34,7 @@ def select_upgrade():
     global upgrading, upgrade_choice, upgrade_options, upgrade_key_pressed
 
     if not upgrade_options:
-        types = random.sample(range(9), 3)
+        types = random.sample([0, 1, 2, 3, 4, 5, 6, 7], 3)
         upgrade_options = [Upgrade(t, upgrade_levels[t] + 1) for t in types]
 
     key_event = pygame.key.get_pressed()
@@ -142,7 +142,8 @@ def start_Game():
     for flame in group_Flame:
         for enemy in group_Enemy:
             if pygame.sprite.collide_mask(flame, enemy):
-                enemy.health-=1
+                damage = 1 * (1.15 ** upgrade_levels[1])
+                enemy.health-=damage
                 enemy.hit_tick = 3
                 if flame in group_Flame:
                     group_Flame.remove(flame)
@@ -151,19 +152,22 @@ def start_Game():
     for axe in group_Axe:
         for enemy in group_Enemy:
             if pygame.sprite.collide_mask(axe, enemy):
-                enemy.health -= 0.2
+                damage = 0.2 * (1.15 ** upgrade_levels[4])
+                enemy.health -= damage
                 enemy.hit_tick = 3
     ################ Phase 2 End ################
 
     ################ Phase 2 Start ################
-    if len(group_Garlic) == 0:
+    if len(group_Garlic) == 0 and upgrade_levels[6] > 0:
         group_Garlic.append(Garlic(player.pos_x, player.pos_y))
 
-    garlic = group_Garlic[0]
-    for enemy in group_Enemy:
-        if garlic.is_in_range(enemy):
-            enemy.health -= 0.1
-            enemy.hit_tick = 3
+    if group_Garlic:
+        garlic = group_Garlic[0]
+        for enemy in group_Enemy:
+            if garlic.is_in_range(enemy):
+                damage = 0.1 * (1.15 ** upgrade_levels[7])
+                enemy.health -= damage
+                enemy.hit_tick = 3
 
     ################ Phase 2 End ################
 
@@ -203,7 +207,7 @@ def start_Game():
             if player.exp >= player.required_exp:
                 player.level += 1
                 player.exp = player.exp % player.required_exp
-                player.required_exp += 10
+                player.required_exp += 5
 
                 global upgrading
                 upgrading = True
@@ -227,7 +231,7 @@ def reset():
     del group_Experience[0:]
     del group_Axe[0:]
     del group_Garlic[0:]
-    upgrade_levels = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    upgrade_levels = [1, 0, 0, 0, 0, 0, 0, 0, 0]
     ################ Phase 2 End ################
 
     del group_Enemy[0:]
