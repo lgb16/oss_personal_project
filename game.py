@@ -27,7 +27,49 @@ end=False
 ############### Phase 2 Start ################
 upgrading = False
 upgrade_choice = 0
+upgrade_options = ["Flame", "Axe", "Garlic"]
+upgrade_key_pressed = False
+
+def select_upgrade():
+    global upgrading, upgrade_choice, upgrade_options, upgrade_key_pressed
+
+    key_event = pygame.key.get_pressed()
+    if not upgrade_key_pressed:
+        if key_event[pygame.K_UP]:
+            upgrade_choice = max(0, upgrade_choice - 1)
+            upgrade_key_pressed = True
+        if key_event[pygame.K_DOWN]:
+            upgrade_choice = min(2, upgrade_choice + 1)
+            upgrade_key_pressed = True
+    else:
+        if not key_event[pygame.K_UP] and not key_event[pygame.K_DOWN]:
+            upgrade_key_pressed = False
+
+    if key_event[pygame.K_a]:
+        print(upgrade_choice)
+        upgrading = False
+
+def draw_upgrade(screen):
+    card_height = 100
+    card_width = 300
+    card_gap = 20
+
+    card_y = (SCREEN_HEIGHT - (card_height * 3 + card_gap * 2)) // 2
+    for i, option in enumerate(upgrade_options):
+        x = (SCREEN_WIDTH - card_width) // 2
+        y = card_y + (i * (card_height + card_gap))
+
+        if i == upgrade_choice:
+            pygame.draw.rect(screen, white, pygame.Rect(x, y, card_width, card_height))
+            pygame.draw.rect(screen, black, pygame.Rect(x + 4, y + 4, card_width - 8, card_height - 8))
+        else:
+            pygame.draw.rect(screen, black, pygame.Rect(x, y, card_width, card_height))
+
+        font = pygame.font.Font(None, 24)
+        text_surface = font.render(option, True, white)
+        screen.blit(text_surface, (x, y))
 ################ Phase 2 End ################
+
 
 def start_Game():
     key_event = pygame.key.get_pressed()
@@ -149,6 +191,9 @@ def start_Game():
                 player.exp = player.exp % player.required_exp
                 player.required_exp += 10
 
+                global upgrading
+                upgrading = True
+
     for axe in group_Axe:
         axe.update()
         if axe.out_boundary:
@@ -162,9 +207,9 @@ def start_Game():
     pygame.display.update()
 
 def reset():
-    global player, group_Enemy, group_Flame, group_Axe, group_Garlic, score, Time, last_spawn_Time
+    global player, group_Enemy, group_Flame, score, Time, last_spawn_Time
     ################ Phase 2 Start ################
-    global group_Experience
+    global group_Experience, group_Axe, group_Garlic
     del group_Experience[0:]
     del group_Axe[0:]
     del group_Garlic[0:]
@@ -179,15 +224,20 @@ def reset():
 
 
 while True:
-    clock.tick(60)
+    ############### Phase 2 Start ################
+    if upgrading:
+        select_upgrade()
+    else:
+    ################ Phase 2 End ################
+        clock.tick(60)
 
-    if Time >= 120:
-        start=False
-        end=True
+        if Time >= 120:
+            start=False
+            end=True
 
-    if start and not end:
-        Time=(pygame.time.get_ticks()-start_tick)//1000
-        start_Game()
+        if start and not end:
+            Time=(pygame.time.get_ticks()-start_tick)//1000
+            start_Game()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -274,6 +324,11 @@ while True:
     font = pygame.font.Font(None, 24)
     text = font.render("LV " + str(player.level), True, white)
     screen.blit(text, (bar_x + 10, bar_y + 4))
+    ################ Phase 2 End ################
+
+    ################ Phase 2 Start ################
+    if upgrading:
+        draw_upgrade(screen)
     ################ Phase 2 End ################
 
     for enemy in score_Enemy:
