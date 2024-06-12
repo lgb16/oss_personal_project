@@ -36,6 +36,8 @@ group_Enemy = []
 group_Experience = []
 group_Axe = []
 group_Garlic = []
+
+upgrade_levels = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 ################ Phase 2 End ################
 
 class SpriteSheet:
@@ -244,7 +246,7 @@ class Player(pygame.sprite.Sprite):
 
         self.level = 1
         self.exp = 0
-        self.required_exp = 5
+        self.required_exp = 1
 
         self.tick = 0
         self.cooltime = {
@@ -422,3 +424,26 @@ class Enemy(pygame.sprite.Sprite):
                 self.hit_tick -= 1
                 self.image = self.hit_spr.spr[self.index]
             ################ Phase 2 End ################
+
+
+################ Phase 2 Start ################
+class Upgrade(pygame.sprite.Sprite):
+    def __init__(self, type, level):
+        self.type = type
+
+        self.weapon_type = self.type // 3
+        self.upgrade_type = self.type % 3
+
+        self.spr = SpriteSheet('Upgrade.png')
+        for i in range(3):
+            self.spr.get_image(1024*i, 0, (1024, 1024), 0.08)
+        self.image = self.spr.spr[self.weapon_type]
+
+        self.value = [level + 1, 1.1 ** level, 0.9 ** level][self.upgrade_type]
+        if self.upgrade_type == 0:
+            self.description = f"Increase projectile to {self.value}"
+        elif self.upgrade_type == 1:
+            self.description = f"Increase damage by {self.value} times"
+        elif self.upgrade_type == 2:
+            self.description = f"Decrease cooldown by {self.value} times"
+################ Phase 2 End ################

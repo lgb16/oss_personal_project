@@ -27,11 +27,15 @@ end=False
 ############### Phase 2 Start ################
 upgrading = False
 upgrade_choice = 0
-upgrade_options = ["Flame", "Axe", "Garlic"]
+upgrade_options = None
 upgrade_key_pressed = False
 
 def select_upgrade():
     global upgrading, upgrade_choice, upgrade_options, upgrade_key_pressed
+
+    if not upgrade_options:
+        types = random.sample(range(9), 3)
+        upgrade_options = [Upgrade(t, upgrade_levels[t] + 1) for t in types]
 
     key_event = pygame.key.get_pressed()
     if not upgrade_key_pressed:
@@ -45,29 +49,39 @@ def select_upgrade():
         if not key_event[pygame.K_UP] and not key_event[pygame.K_DOWN]:
             upgrade_key_pressed = False
 
-    if key_event[pygame.K_a]:
-        print(upgrade_choice)
+    if key_event[pygame.K_SPACE]:
+        selected = upgrade_options[upgrade_choice]
+        upgrade_levels[selected.type] += 1
+        upgrade_options = None
         upgrading = False
 
 def draw_upgrade(screen):
+    global upgrade_choice, upgrade_options
+
     card_height = 100
-    card_width = 300
+    card_width = 400
     card_gap = 20
 
-    card_y = (SCREEN_HEIGHT - (card_height * 3 + card_gap * 2)) // 2
+    text = Font.render("Press Spacebar to select upgrade!", True , black)
+    screen.blit(text,(SCREEN_WIDTH // 2 - 280, SCREEN_HEIGHT // 2 - 200))
+    
+    card_y = (SCREEN_HEIGHT - (card_height * 3 + card_gap * 2)) // 2 + 32
     for i, option in enumerate(upgrade_options):
         x = (SCREEN_WIDTH - card_width) // 2
         y = card_y + (i * (card_height + card_gap))
-
+        
         if i == upgrade_choice:
             pygame.draw.rect(screen, white, pygame.Rect(x, y, card_width, card_height))
             pygame.draw.rect(screen, black, pygame.Rect(x + 4, y + 4, card_width - 8, card_height - 8))
         else:
             pygame.draw.rect(screen, black, pygame.Rect(x, y, card_width, card_height))
 
+        pygame.draw.rect(screen, white, pygame.Rect(x + 10, y + 10, card_height - 20, card_height - 20))
+        screen.blit(option.image, (x + 14, y + 14))
+
         font = pygame.font.Font(None, 24)
-        text_surface = font.render(option, True, white)
-        screen.blit(text_surface, (x, y))
+        text_surface = font.render(option.description, True, white)
+        screen.blit(text_surface, (x + 100, y + 40))
 ################ Phase 2 End ################
 
 
@@ -209,10 +223,11 @@ def start_Game():
 def reset():
     global player, group_Enemy, group_Flame, score, Time, last_spawn_Time
     ################ Phase 2 Start ################
-    global group_Experience, group_Axe, group_Garlic
+    global group_Experience, group_Axe, group_Garlic, upgrade_levels
     del group_Experience[0:]
     del group_Axe[0:]
     del group_Garlic[0:]
+    upgrade_levels = [0, 0, 0, 0, 0, 0, 0, 0, 0]
     ################ Phase 2 End ################
 
     del group_Enemy[0:]
@@ -228,15 +243,16 @@ while True:
     if upgrading:
         select_upgrade()
     else:
+        Time += 1/60
     ################ Phase 2 End ################
         clock.tick(60)
 
-        if Time >= 120:
+        if Time >= 300:
             start=False
             end=True
 
         if start and not end:
-            Time=(pygame.time.get_ticks()-start_tick)//1000
+            # Time=(pygame.time.get_ticks()-start_tick)//1000
             start_Game()
 
     for event in pygame.event.get():
@@ -247,9 +263,10 @@ while True:
                 if not start and end:
                     end=False
                     reset()
-                start_tick=pygame.time.get_ticks()
-                start=True
-    
+                if not start:
+                    start_tick=pygame.time.get_ticks()
+                    start=True
+        
     #fill screen background and scoreboard
     x=0
     y=0
@@ -260,9 +277,23 @@ while True:
             x=0
             y+=size_Grass[1]
 
+    ################ Phase 2 Start ################
+    for exp in group_Experience:
+        screen.blit(exp.image, (exp.pos_x, exp.pos_y))
+
+    for axe in group_Axe:
+        screen.blit(axe.image, axe.rect.topleft)
+
+    for garlic in group_Garlic:
+        screen.blit(garlic.image, garlic.rect.topleft)
+    ################ Phase 2 End ################
+
     pygame.draw.rect(screen, black, [0,0,SCREEN_WIDTH,SCORE_HEIGHT])
 
-    text_time=Font.render("TIME : "+str(Time)+" / 120",True,white)
+    # text_time=Font.render("TIME : "+str(Time)+" / 120",True,white)
+    ################ Phase 2 Start ################
+    text_time=Font.render("TIME : " + str(int(Time)) + " / 300", True, white)
+    ################ Phase 2 End ################
     screen.blit(text_time,(30,30))
 
     text_score=Font.render("SCORE : "+str(score),True,white)
@@ -281,17 +312,6 @@ while True:
     for flame in group_Flame:
         screen.blit(flame.image,(flame.pos_x,flame.pos_y))
     screen.blit(player.image,(player.pos_x,player.pos_y))
-
-    ################ Phase 2 Start ################
-    for exp in group_Experience:
-        screen.blit(exp.image, (exp.pos_x, exp.pos_y))
-
-    for axe in group_Axe:
-        screen.blit(axe.image, axe.rect.topleft)
-
-    for garlic in group_Garlic:
-        screen.blit(garlic.image, garlic.rect.topleft)
-    ################ Phase 2 End ################
 
     ################ Phase 2 Start ################
     red = (255, 0, 0)
@@ -327,7 +347,7 @@ while True:
     ################ Phase 2 End ################
 
     ################ Phase 2 Start ################
-    if upgrading:
+    if upgrading and upgrade_options:
         draw_upgrade(screen)
     ################ Phase 2 End ################
 
