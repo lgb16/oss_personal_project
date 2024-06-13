@@ -75,7 +75,7 @@ class Experience(pygame.sprite.Sprite):
         distance = math.sqrt((player_x - self.pos_x) ** 2 + (player_y - self.pos_y) ** 2)
         if distance < 80:
             acc = pygame.math.Vector2(player_x - self.pos_x, player_y - self.pos_y)
-            self.velocity += acc.normalize() * 0.3
+            self.velocity += acc.normalize() * 0.5
 
             if distance < 20:
                 self.collected = True

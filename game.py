@@ -34,7 +34,18 @@ def select_upgrade():
     global upgrading, upgrade_choice, upgrade_options, upgrade_key_pressed
 
     if not upgrade_options:
-        types = random.sample([0, 1, 2, 3, 4, 5, 6, 7], 3)
+        pool = [0, 1, 2]
+        if upgrade_levels[3] == 0:
+            pool.append(3)
+        else:
+            pool += [4, 5]
+
+        if upgrade_levels[6] == 0:
+            pool.append(6)
+        else:
+            pool += [7]
+
+        types = random.sample(pool, 3)
         upgrade_options = [Upgrade(t, upgrade_levels[t] + 1) for t in types]
 
     key_event = pygame.key.get_pressed()
@@ -165,7 +176,7 @@ def start_Game():
         garlic = group_Garlic[0]
         for enemy in group_Enemy:
             if garlic.is_in_range(enemy):
-                damage = 0.1 * (1.15 ** upgrade_levels[7])
+                damage = 0.05 * (1.15 ** upgrade_levels[7])
                 enemy.health -= damage
                 enemy.hit_tick = 3
 
