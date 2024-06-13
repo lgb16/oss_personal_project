@@ -37,7 +37,6 @@ group_Experience = []
 group_Axe = []
 group_Garlic = []
 
-upgrade_levels = [1, 0, 0, 0, 0, 0, 0, 0, 0]
 ################ Phase 2 End ################
 
 class SpriteSheet:
@@ -246,13 +245,15 @@ class Player(pygame.sprite.Sprite):
 
         self.level = 1
         self.exp = 0
-        self.required_exp = 1
+        self.required_exp = 2
 
         self.tick = 0
         self.cooltime = {
             "flame": 15,
             "axe": 30 
         }
+
+        self.upgrade_levels = [1, 0, 0, 0, 0, 0, 0, 0, 0]
         ################ Phase 2 End ################
 
     def flip_image(self):
@@ -271,7 +272,9 @@ class Player(pygame.sprite.Sprite):
 
         self.level = 1
         self.exp = 0
-        self.required_exp = 5
+        self.required_exp = 2
+
+        self.upgrade_levels = [1, 0, 0, 0, 0, 0, 0, 0, 0]
         ################ Phase 2 End ################
 
     def update(self):
@@ -310,14 +313,14 @@ class Player(pygame.sprite.Sprite):
             ################ Phase 2 Start ################
             self.tick += 1
             if self.attacking==True:
-                if self.tick % math.floor(self.cooltime["flame"] * (0.85 ** upgrade_levels[2])) == 0:
-                    for i in range(upgrade_levels[0]):
+                if self.tick % math.floor(self.cooltime["flame"] * (0.85 ** self.upgrade_levels[2])) == 0:
+                    for i in range(self.upgrade_levels[0]):
                         gap = size_Flame[1] * 0.6
-                        y = self.pos_y - gap * (upgrade_levels[0] - 1) + gap * i
+                        y = self.pos_y - gap * (self.upgrade_levels[0] - 1) + gap * i
                         group_Flame.append(Flame(self.pos_x,y,self.fliped))
                 
-                if self.tick % math.floor(self.cooltime["axe"] * (0.85 ** upgrade_levels[5])) == 0:
-                    for _ in range(upgrade_levels[3]):
+                if self.tick % math.floor(self.cooltime["axe"] * (0.85 ** self.upgrade_levels[5])) == 0:
+                    for _ in range(self.upgrade_levels[3]):
                         group_Axe.append(Axe(self.pos_x,self.pos_y))
             
             ################ Phase 2 End ################

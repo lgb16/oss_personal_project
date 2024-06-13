@@ -35,18 +35,18 @@ def select_upgrade():
 
     if not upgrade_options:
         pool = [0, 1, 2]
-        if upgrade_levels[3] == 0:
+        if player.upgrade_levels[3] == 0:
             pool.append(3)
         else:
             pool += [4, 5]
 
-        if upgrade_levels[6] == 0:
+        if player.upgrade_levels[6] == 0:
             pool.append(6)
         else:
             pool += [7]
 
         types = random.sample(pool, 3)
-        upgrade_options = [Upgrade(t, upgrade_levels[t] + 1) for t in types]
+        upgrade_options = [Upgrade(t, player.upgrade_levels[t] + 1) for t in types]
 
     key_event = pygame.key.get_pressed()
     if not upgrade_key_pressed:
@@ -62,7 +62,7 @@ def select_upgrade():
 
     if key_event[pygame.K_SPACE]:
         selected = upgrade_options[upgrade_choice]
-        upgrade_levels[selected.type] += 1
+        player.upgrade_levels[selected.type] += 1
         upgrade_options = None
         upgrading = False
 
@@ -153,7 +153,7 @@ def start_Game():
     for flame in group_Flame:
         for enemy in group_Enemy:
             if pygame.sprite.collide_mask(flame, enemy):
-                damage = 1 * (1.15 ** upgrade_levels[1])
+                damage = 1 * (1.15 ** player.upgrade_levels[1])
                 enemy.health-=damage
                 enemy.hit_tick = 3
                 if flame in group_Flame:
@@ -163,20 +163,20 @@ def start_Game():
     for axe in group_Axe:
         for enemy in group_Enemy:
             if pygame.sprite.collide_mask(axe, enemy):
-                damage = 0.2 * (1.15 ** upgrade_levels[4])
+                damage = 0.2 * (1.15 ** player.upgrade_levels[4])
                 enemy.health -= damage
                 enemy.hit_tick = 3
     ################ Phase 2 End ################
 
     ################ Phase 2 Start ################
-    if len(group_Garlic) == 0 and upgrade_levels[6] > 0:
+    if len(group_Garlic) == 0 and player.upgrade_levels[6] > 0:
         group_Garlic.append(Garlic(player.pos_x, player.pos_y))
 
     if group_Garlic:
         garlic = group_Garlic[0]
         for enemy in group_Enemy:
             if garlic.is_in_range(enemy):
-                damage = 0.05 * (1.15 ** upgrade_levels[7])
+                damage = 0.05 * (1.15 ** player.upgrade_levels[7])
                 enemy.health -= damage
                 enemy.hit_tick = 3
 
@@ -238,11 +238,10 @@ def start_Game():
 def reset():
     global player, group_Enemy, group_Flame, score, Time, last_spawn_Time
     ################ Phase 2 Start ################
-    global group_Experience, group_Axe, group_Garlic, upgrade_levels
+    global group_Experience, group_Axe, group_Garlic
     del group_Experience[0:]
     del group_Axe[0:]
     del group_Garlic[0:]
-    upgrade_levels = [1, 0, 0, 0, 0, 0, 0, 0, 0]
     ################ Phase 2 End ################
 
     del group_Enemy[0:]
