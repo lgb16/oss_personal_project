@@ -18,6 +18,13 @@ for i in range(3):
     score_Enemy.append(Enemy(i+1,350+i*200,0,True))
 
 score = 0
+#############################################################################
+################################## PHASE 2 ##################################
+#############################################################################
+max_score = 0
+#############################################################################
+################################## PHASE 2 ##################################
+#############################################################################
 start_tick = 0
 Time = 0
 last_spawn_Time = 0
@@ -210,15 +217,18 @@ while True:
         text_start=Font.render("Press Spacebar to start!", True , black)
         screen.blit(text_start,(SCREEN_WIDTH//2-200,SCREEN_HEIGHT//2-100))
     elif not start and end:
-        text_end=Font.render("Game Over!",True,black)
-        screen.blit(text_end,(SCREEN_WIDTH//2-80,SCREEN_HEIGHT//2-200))
-        text_end2=Font.render("Score : "+str(score),True,black)
-        screen.blit(text_end2,(SCREEN_WIDTH//2-80,SCREEN_HEIGHT//2-100))
-        text_end3=Font.render("Press Spacebar to restart!",True,black)
-        screen.blit(text_end3,(SCREEN_WIDTH//2-200,SCREEN_HEIGHT//2))
 #############################################################################
 ################################## PHASE 2 ##################################
 #############################################################################
+        text_end=Font.render("Game Over!",True,black)
+        screen.blit(text_end,(SCREEN_WIDTH//2-200,SCREEN_HEIGHT//2-200))
+        text_end2=Font.render("Score : "+str(score),True,black)
+        screen.blit(text_end2,(SCREEN_WIDTH//2-200,SCREEN_HEIGHT//2-100))
+        text_end3=Font.render("Press Spacebar to restart!",True,black)
+        screen.blit(text_end3,(SCREEN_WIDTH//2-200,SCREEN_HEIGHT//2+100))
+        text_end4=Font.render("High Score : "+str(max_score),True,black)
+        screen.blit(text_end4,(SCREEN_WIDTH//2-200,SCREEN_HEIGHT//2))
+
     elif paused:
         text_paused = Font.render("Game Paused", True, black)
         screen.blit(text_paused, (SCREEN_WIDTH // 2 - 50, SCREEN_HEIGHT // 2 - 50))
