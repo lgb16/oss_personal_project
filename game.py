@@ -228,14 +228,16 @@ while True:
 #############################################################################
 ################################## PHASE 2 ##################################
 #############################################################################
+        if max_score < score:
+            max_score = score
         text_end=Font.render("Game Over!",True,black)
         screen.blit(text_end,(SCREEN_WIDTH//2-200,SCREEN_HEIGHT//2-200))
         text_end2=Font.render("Score : "+str(score),True,black)
-        screen.blit(text_end2,(SCREEN_WIDTH//2-200,SCREEN_HEIGHT//2-100))
+        screen.blit(text_end2,(SCREEN_WIDTH//2-200,SCREEN_HEIGHT//2-50))
         text_end3=Font.render("Press Spacebar to restart!",True,black)
-        screen.blit(text_end3,(SCREEN_WIDTH//2-200,SCREEN_HEIGHT//2+100))
-        text_end4=Font.render("High Score : "+str(max_score),True,black)
-        screen.blit(text_end4,(SCREEN_WIDTH//2-200,SCREEN_HEIGHT//2))
+        screen.blit(text_end3,(SCREEN_WIDTH//2-200,SCREEN_HEIGHT//2+50))
+        #text_end4=Font.render("High Score : "+str(max_score),True,black)
+        #screen.blit(text_end4,(SCREEN_WIDTH//2-200,SCREEN_HEIGHT//2))
 
     elif paused:
         text_paused = Font.render("Game Paused", True, black)
