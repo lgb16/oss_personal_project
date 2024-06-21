@@ -18,11 +18,25 @@ for i in range(3):
     score_Enemy.append(Enemy(i+1,350+i*200,0,True))
 
 score = 0
+#############################################################################
+################################## PHASE 2 ##################################
+#############################################################################
+max_score = 0
+#############################################################################
+################################## PHASE 2 ##################################
+#############################################################################
 start_tick = 0
 Time = 0
 last_spawn_Time = 0
 start=False
 end=False
+#############################################################################
+################################## PHASE 2 ##################################
+#############################################################################
+paused = False
+#############################################################################
+################################## PHASE 2 ##################################
+#############################################################################
 
 def start_Game():
     key_event = pygame.key.get_pressed()
@@ -54,16 +68,36 @@ def start_Game():
             Type=random.randrange(1,18)//6+1
         else:
             Type=random.randrange(1,2+Time//5)//6+1
-
-        if random.randrange(1,3)==1:
+#############################################################################
+################################## PHASE 2 ##################################
+#############################################################################
+        random_direction = random.randrange(1,5)
+        if random_direction==1:
             fliped=False
             x=-size_Enemy[0]*1.5
-        else:
+            direction = "horizontal"
+        elif random_direction==2:
             fliped=True
             x=SCREEN_WIDTH+size_Enemy[0]*1.5
-        y=random.randrange(SCORE_HEIGHT+20,SCREEN_HEIGHT-size_Enemy[1]-20)
+            direction = "horizontal"
+        elif random_direction==3:
+            fliped = False
+            y=-size_Enemy[1]*1.5
+            direction = "vertical"
+        else:
+            fliped = True
+            y= SCREEN_HEIGHT+size_Enemy[1]*1.5
+            direction = "vertical"
 
-        group_Enemy.append(Enemy(Type,x,y,fliped))
+        if direction == "horizontal":
+            y=random.randrange(SCORE_HEIGHT+20,SCREEN_HEIGHT-size_Enemy[1]-20)
+        else:
+            x = random.randrange(20, SCREEN_WIDTH - size_Enemy[0] - 20)
+
+        group_Enemy.append(Enemy(Type,x,y,fliped,direction))
+#############################################################################
+################################## PHASE 2 ##################################
+#############################################################################
         last_spawn_Time=Time
 
     #check collide player and enemy
@@ -107,6 +141,7 @@ def reset():
     Time=0
     last_spawn_Time=0
 
+
 while True:
     clock.tick(60)
 
@@ -115,8 +150,15 @@ while True:
         end=True
 
     if start and not end:
-        Time=(pygame.time.get_ticks()-start_tick)//1000
-        start_Game()
+#############################################################################
+################################## PHASE 2 ##################################
+#############################################################################
+        if not paused:
+#############################################################################
+################################## PHASE 2 ##################################
+#############################################################################
+            Time=(pygame.time.get_ticks()-start_tick)//1000
+            start_Game()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -126,8 +168,22 @@ while True:
                 if not start and end:
                     end=False
                     reset()
-                start_tick=pygame.time.get_ticks()
-                start=True
+#############################################################################
+################################## PHASE 2 ##################################
+#############################################################################
+                elif not start and not end:
+                    start=True
+                    start_tick=pygame.time.get_ticks()
+                elif start and not end:
+                    paused = not paused
+                    if paused:
+                        paused_time = pygame.time.get_ticks() - start_tick
+                    else:
+                        start_tick = pygame.time.get_ticks() - paused_time
+#############################################################################
+################################## PHASE 2 ##################################
+#############################################################################
+                
     
     #fill screen background and scoreboard
     x=0
@@ -167,11 +223,26 @@ while True:
     if not start and not end:
         text_start=Font.render("Press Spacebar to start!", True , black)
         screen.blit(text_start,(SCREEN_WIDTH//2-200,SCREEN_HEIGHT//2-100))
+
     elif not start and end:
+#############################################################################
+################################## PHASE 2 ##################################
+#############################################################################
+        if max_score < score:
+            max_score = score
         text_end=Font.render("Game Over!",True,black)
-        screen.blit(text_end,(SCREEN_WIDTH//2-80,SCREEN_HEIGHT//2-200))
+        screen.blit(text_end,(SCREEN_WIDTH//2-200,SCREEN_HEIGHT//2-200))
         text_end2=Font.render("Score : "+str(score),True,black)
-        screen.blit(text_end2,(SCREEN_WIDTH//2-80,SCREEN_HEIGHT//2-100))
+        screen.blit(text_end2,(SCREEN_WIDTH//2-200,SCREEN_HEIGHT//2-50))
         text_end3=Font.render("Press Spacebar to restart!",True,black)
-        screen.blit(text_end3,(SCREEN_WIDTH//2-200,SCREEN_HEIGHT//2))
+        screen.blit(text_end3,(SCREEN_WIDTH//2-200,SCREEN_HEIGHT//2+50))
+        #text_end4=Font.render("High Score : "+str(max_score),True,black)
+        #screen.blit(text_end4,(SCREEN_WIDTH//2-200,SCREEN_HEIGHT//2))
+
+    elif paused:
+        text_paused = Font.render("Game Paused", True, black)
+        screen.blit(text_paused, (SCREEN_WIDTH // 2 - 50, SCREEN_HEIGHT // 2 - 50))
+#############################################################################
+################################## PHASE 2 ##################################
+#############################################################################
     pygame.display.update()
