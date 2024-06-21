@@ -141,6 +141,7 @@ def reset():
     Time=0
     last_spawn_Time=0
 
+
 while True:
     clock.tick(60)
 
@@ -170,13 +171,19 @@ while True:
 #############################################################################
 ################################## PHASE 2 ##################################
 #############################################################################
+                elif not start and not end:
+                    start=True
+                    start_tick=pygame.time.get_ticks()
                 elif start and not end:
                     paused = not paused
+                    if paused:
+                        paused_time = pygame.time.get_ticks() - start_tick
+                    else:
+                        start_tick = pygame.time.get_ticks() - paused_time
 #############################################################################
 ################################## PHASE 2 ##################################
 #############################################################################
-                start_tick=pygame.time.get_ticks()
-                start=True
+                
     
     #fill screen background and scoreboard
     x=0
@@ -216,6 +223,7 @@ while True:
     if not start and not end:
         text_start=Font.render("Press Spacebar to start!", True , black)
         screen.blit(text_start,(SCREEN_WIDTH//2-200,SCREEN_HEIGHT//2-100))
+
     elif not start and end:
 #############################################################################
 ################################## PHASE 2 ##################################
