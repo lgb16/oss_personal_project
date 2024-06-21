@@ -173,7 +173,13 @@ class Player(pygame.sprite.Sprite):
                 self.image = self.images[self.index]
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self,Type,x,y,fliped):
+#############################################################################
+################################## PHASE 2 ##################################
+#############################################################################
+    def __init__(self,Type,x,y,fliped,direction="horizontal"):
+#############################################################################
+################################## PHASE 2 ##################################
+#############################################################################
         pygame.sprite.Sprite.__init__(self)
 
         self.elapsedTime = 0
@@ -210,6 +216,13 @@ class Enemy(pygame.sprite.Sprite):
         self.pos_x = x
         self.pos_y = y
         self.fliped = fliped
+#############################################################################
+################################## PHASE 2 ##################################
+#############################################################################
+        self.direction = direction
+#############################################################################
+################################## PHASE 2 ##################################
+#############################################################################
 
         self.images = self.spr.spr
         self.image = self.spr.spr[0]
@@ -217,18 +230,32 @@ class Enemy(pygame.sprite.Sprite):
 
     def update(self):
         #update position
-        f=1
-        if self.fliped:
-            f=-1
-        if self.index%2==1:
-            self.pos_x+=self.velocity*f
-        else:
-            self.pos_x+=1*f
-
+#############################################################################
+################################## PHASE 2 ##################################
+#############################################################################
+        if self.direction == "horizontal":
+            f=1
+            if self.fliped:
+                f=-1
+            if self.index%2==1:
+                self.pos_x+=self.velocity*f
+            else:
+                self.pos_x+=1*f
+        elif self.direction == "vertical":
+            f=1
+            if self.fliped:
+               f=-1
+            if self.index%2==1:
+                self.pos_y+=self.velocity*f
+            else:
+                self.pos_y+=1*f
+ 
         #check out_boundary
-        if self.pos_x<-100 or self.pos_x>SCREEN_WIDTH+100:
+        if self.pos_x<-100 or self.pos_x>SCREEN_WIDTH+100 or self.pos_y < -100 or self.pos_y > SCREEN_HEIGHT + 100:
             self.out_boundary=True
-
+#############################################################################
+################################## PHASE 2 ##################################
+#############################################################################
         #update rect
         self.rect = self.image.get_rect(center=(self.pos_x,self.pos_y))
 

@@ -61,16 +61,36 @@ def start_Game():
             Type=random.randrange(1,18)//6+1
         else:
             Type=random.randrange(1,2+Time//5)//6+1
-
-        if random.randrange(1,3)==1:
+#############################################################################
+################################## PHASE 2 ##################################
+#############################################################################
+        random_direction = random.randrange(1,5)
+        if random_direction==1:
             fliped=False
             x=-size_Enemy[0]*1.5
-        else:
+            direction = "horizontal"
+        elif random_direction==2:
             fliped=True
             x=SCREEN_WIDTH+size_Enemy[0]*1.5
-        y=random.randrange(SCORE_HEIGHT+20,SCREEN_HEIGHT-size_Enemy[1]-20)
+            direction = "horizontal"
+        elif random_direction==3:
+            fliped = False
+            y=-size_Enemy[1]*1.5
+            direction = "vertical"
+        else:
+            fliped = True
+            y= SCREEN_HEIGHT+size_Enemy[1]*1.5
+            direction = "vertical"
 
-        group_Enemy.append(Enemy(Type,x,y,fliped))
+        if direction == "horizontal":
+            y=random.randrange(SCORE_HEIGHT+20,SCREEN_HEIGHT-size_Enemy[1]-20)
+        else:
+            x = random.randrange(20, SCREEN_WIDTH - size_Enemy[0] - 20)
+
+        group_Enemy.append(Enemy(Type,x,y,fliped,direction))
+#############################################################################
+################################## PHASE 2 ##################################
+#############################################################################
         last_spawn_Time=Time
 
     #check collide player and enemy
